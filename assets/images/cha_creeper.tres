@@ -1,0 +1,14 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://c17gma52gxrg1"]
+
+[ext_resource type="Texture2D" uid="uid://bejfgxsl2mq7g" path="res://assets/images/cha_creeper.png" id="1_0dh0t"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_0dh0t")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]

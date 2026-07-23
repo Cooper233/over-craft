@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dmd20odnvddrs"]
+
+[ext_resource type="Script" uid="uid://dadtdmurvqsck" path="res://src/ui/lobby_ui.gd" id="1_o1atq"]
+
+[node name="Lobby" type="Node2D" unique_id=519410875]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1771044230]
+script = ExtResource("1_o1atq")

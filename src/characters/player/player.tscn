@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://us6kdnrj8bot"]
+
+[ext_resource type="Script" uid="uid://ym2trpphecci" path="res://src/characters/player/player.gd" id="1_f28c8"]
+[ext_resource type="Material" uid="uid://bqdljto0wbkwy" path="res://assets/materials/entities/EntitySpriteMat.tres" id="2_03ylq"]
+[ext_resource type="SpriteFrames" uid="uid://c17gma52gxrg1" path="res://assets/images/cha_creeper.tres" id="3_hhnms"]
+[ext_resource type="Script" uid="uid://buyegbvkqejgp" path="res://src/characters/player/EntitySpriteController.gd" id="3_vobfi"]
+[ext_resource type="Script" uid="uid://bjq7oryw455ow" path="res://src/characters/player/PlayerAttackComponent.gd" id="5_hhnms"]
+[ext_resource type="Script" uid="uid://om6l0334acaa" path="res://src/characters/player/PlayerItemContainer.gd" id="6_hhaut"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5c1al"]
+radius = 15.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_03ylq"]
+size = Vector2(40, 2)
+
+[node name="Player" type="RigidBody2D" unique_id=1648402091 node_paths=PackedStringArray("attackArea")]
+collision_mask = 27
+gravity_scale = 0.0
+lock_rotation = true
+linear_damp = 2.0
+script = ExtResource("1_f28c8")
+speed = 200.0
+turn_rate = 5.0
+attackArea = NodePath("boxCenter/AttackArea")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=247132928]
+position = Vector2(0, -32)
+shape = SubResource("CircleShape2D_5c1al")
+
+[node name="Visual" type="AnimatedSprite2D" parent="." unique_id=1623886880]
+material = ExtResource("2_03ylq")
+scale = Vector2(0.5, 0.5)
+sprite_frames = ExtResource("3_hhnms")
+offset = Vector2(0, -64)
+script = ExtResource("3_vobfi")
+
+[node name="boxCenter" type="Node2D" parent="." unique_id=1396237276]
+position = Vector2(0, -32)
+
+[node name="AttackArea" type="Area2D" parent="boxCenter" unique_id=1641880483]
+position = Vector2(26, 0)
+collision_layer = 0
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="boxCenter/AttackArea" unique_id=419966503]
+shape = SubResource("RectangleShape2D_03ylq")
+
+[node name="AttackComponent" type="Node" parent="." unique_id=1724062920 node_paths=PackedStringArray("player")]
+script = ExtResource("5_hhnms")
+player = NodePath("..")
+
+[node name="ItemContainer" type="Node2D" parent="." unique_id=550424299]
+position = Vector2(0, -22)
+script = ExtResource("6_hhaut")
+radius = 40.0
+maxLeanAngle = 15.0
+bounceAmplitude = 5.0
+bouncePhaseOffset = 1.0

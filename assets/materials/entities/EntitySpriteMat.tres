@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://bqdljto0wbkwy"]
+
+[ext_resource type="Shader" uid="uid://bboqaipdl36bm" path="res://assets/materials/entities/EntitySpriteShader.gdshader" id="1_vfkpi"]
+
+[resource]
+shader = ExtResource("1_vfkpi")
+shader_parameter/hurt = false
+shader_parameter/flip_x = false
+shader_parameter/flip_y = false
+shader_parameter/alpha = 1.0

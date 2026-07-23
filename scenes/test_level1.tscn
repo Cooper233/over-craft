@@ -1,0 +1,173 @@
+[gd_scene format=4 uid="uid://ck2yfpkq1csbl"]
+
+[ext_resource type="Script" uid="uid://bvfi8xmbq4e3p" path="res://scenes/test_level_1.gd" id="1_07xfw"]
+[ext_resource type="TileSet" uid="uid://dfaykfp5isuga" path="res://assets/tiles/kitchen.tres" id="1_huy02"]
+[ext_resource type="Script" uid="uid://caargnqlrrd7b" path="res://src/entities/FurnitureFridge.gd" id="3_3mp4b"]
+[ext_resource type="Script" uid="uid://0i361jr361wl" path="res://src/systems/camera/cinema_camera.gd" id="3_46lq7"]
+[ext_resource type="Script" uid="uid://cckjefxbfeumn" path="res://src/entities/CollideInteractableMark.gd" id="4_ntkqf"]
+[ext_resource type="Texture2D" uid="uid://b67t3oe463wyr" path="res://assets/images/furniture/desk1.png" id="4_tua5b"]
+[ext_resource type="Texture2D" uid="uid://cfaae1gupby6e" path="res://assets/images/furniture/resourcebox.png" id="5_4d6kx"]
+[ext_resource type="Script" uid="uid://c3cwenehw1a8h" path="res://src/entities/AttackIneractableMark.gd" id="5_iddr2"]
+[ext_resource type="Script" uid="uid://wmyastf0usxo" path="res://src/entities/FurnitureDesk.gd" id="8_hrxm6"]
+[ext_resource type="Script" uid="uid://bda11hpmkx553" path="res://src/entities/FurnitureTrashcan.gd" id="9_07xfw"]
+[ext_resource type="Texture2D" uid="uid://bi35omgmcaly3" path="res://assets/images/furniture/trashcan.png" id="9_h5wts"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ku51g"]
+friction = 0.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ku51g"]
+size = Vector2(32, 29)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ntkqf"]
+size = Vector2(32, 29)
+
+[node name="root" type="Node2D" unique_id=358877700]
+y_sort_enabled = true
+script = ExtResource("1_07xfw")
+
+[node name="Map" type="Node2D" parent="." unique_id=1725359452]
+
+[node name="Floor" type="TileMapLayer" parent="Map" unique_id=205357901]
+z_index = -1000
+tile_map_data = PackedByteArray("AAAAAAAAAQADAA8AAAABAAAAAQAEAA8AAAACAAAAAQAEAA8AAAADAAAAAQAEAA8AAAAEAAAAAQAEAA8AAAAFAAAAAQAEAA8AAAAGAAAAAQAEAA8AAAAHAAAAAQAEAA8AAAAIAAAAAQAEAA8AAAAJAAAAAQAEAA8AAAAKAAAAAQAEAA8AAAALAAAAAQAEAA8AAAAMAAAAAQAEAA8AAAANAAAAAQAFAA8AAAANAAEAAQAFABAAAAANAAIAAQAFABAAAAANAAMAAQAFABAAAAANAAQAAQAFABAAAAANAAUAAQAFABAAAAANAAYAAQAFABEAAAAMAAYAAQAEABEAAAALAAYAAQAEABEAAAAKAAYAAQAEABEAAAAJAAYAAQAEABEAAAAIAAYAAQAEABEAAAAHAAYAAQAEABEAAAAGAAYAAQAEABEAAAAFAAYAAQAEABEAAAAEAAYAAQAEABEAAAADAAYAAQAEABEAAAACAAYAAQAEABEAAAABAAYAAQAEABEAAAAAAAYAAQADABEAAAAAAAUAAQADABAAAAAAAAQAAQADABAAAAAAAAMAAQADABAAAAAAAAIAAQADABAAAAAAAAEAAQADABAAAAABAAEAAQAEABAAAAABAAIAAQAEABAAAAABAAMAAQAEABAAAAABAAQAAQAEABAAAAABAAUAAQAEABAAAAACAAEAAQAEABAAAAACAAIAAQAEABAAAAACAAMAAQAEABAAAAACAAQAAQAEABAAAAACAAUAAQAEABAAAAADAAEAAQAEABAAAAADAAIAAQAEABAAAAADAAMAAQAEABAAAAADAAQAAQAEABAAAAADAAUAAQAEABAAAAAEAAEAAQAEABAAAAAEAAIAAQAEABAAAAAEAAMAAQAEABAAAAAEAAQAAQAEABAAAAAEAAUAAQAEABAAAAAFAAEAAQAEABAAAAAFAAIAAQAEABAAAAAFAAMAAQAEABAAAAAFAAQAAQAEABAAAAAFAAUAAQAEABAAAAAGAAEAAQAEABAAAAAGAAIAAQAEABAAAAAGAAMAAQAEABAAAAAGAAQAAQAEABAAAAAGAAUAAQAEABAAAAAHAAEAAQAEABAAAAAHAAIAAQAEABAAAAAHAAMAAQAEABAAAAAHAAQAAQAEABAAAAAHAAUAAQAEABAAAAAIAAEAAQAEABAAAAAIAAIAAQAEABAAAAAIAAMAAQAEABAAAAAIAAQAAQAEABAAAAAIAAUAAQAEABAAAAAJAAEAAQAEABAAAAAJAAIAAQAEABAAAAAJAAMAAQAEABAAAAAJAAQAAQAEABAAAAAJAAUAAQAEABAAAAAKAAEAAQAEABAAAAAKAAIAAQAEABAAAAAKAAMAAQAEABAAAAAKAAQAAQAEABAAAAAKAAUAAQAEABAAAAALAAEAAQAEABAAAAALAAIAAQAEABAAAAALAAMAAQAEABAAAAALAAQAAQAEABAAAAALAAUAAQAEABAAAAAMAAEAAQAEABAAAAAMAAIAAQAEABAAAAAMAAMAAQAEABAAAAAMAAQAAQAEABAAAAAMAAUAAQAEABAAAAAAAP//AQAHAA0AAAABAP//AQAHAA0AAAACAP//AQAHAA0AAAADAP//AQAHAA0AAAAEAP//AQAHAA0AAAAFAP//AQAHAA0AAAAGAP//AQAHAA0AAAAHAP//AQAHAA0AAAAIAP//AQAHAA0AAAAJAP//AQAHAA0AAAAKAP//AQAHAA0AAAALAP//AQAHAA0AAAAMAP//AQAHAA0AAAANAP//AQAHAA0AAAAAAAcAAQAHAA0AAAABAAcAAQAHAA0AAAACAAcAAQAHAA0AAAADAAcAAQAHAA0AAAAEAAcAAQAHAA0AAAAFAAcAAQAHAA0AAAAGAAcAAQAHAA0AAAAHAAcAAQAHAA0AAAAIAAcAAQAHAA0AAAAJAAcAAQAHAA0AAAAKAAcAAQAHAA0AAAALAAcAAQAHAA0AAAAMAAcAAQAHAA0AAAANAAcAAQAHAA0AAAAOAAAAAQAHAA0AAAAOAAEAAQAHAA0AAAAOAAIAAQAHAA0AAAAOAAMAAQAHAA0AAAAOAAQAAQAHAA0AAAAOAAUAAQAHAA0AAAAOAAYAAQAHAA0AAAAOAP//AQAHAA0AAAAOAAcAAQAHAA0AAAD/////AQAHAA0AAAD//wAAAQAHAA0AAAD//wEAAQAHAA0AAAD//wIAAQAHAA0AAAD//wMAAQAHAA0AAAD//wQAAQAHAA0AAAD//wUAAQAHAA0AAAD//wYAAQAHAA0AAAD//wcAAQAHAA0AAAA=")
+tile_set = ExtResource("1_huy02")
+
+[node name="MainCamera" type="Camera2D" parent="." unique_id=1292204974]
+script = ExtResource("3_46lq7")
+default_zoom = Vector2(2, 2)
+
+[node name="Entities" type="Node2D" parent="." unique_id=1494736012]
+y_sort_enabled = true
+
+[node name="Furniture_fridge" type="Node2D" parent="Entities" unique_id=1803583387 node_paths=PackedStringArray("collisionInteract", "attackInteract", "storePoint")]
+position = Vector2(32, -1)
+script = ExtResource("3_3mp4b")
+collisionInteract = NodePath("CollisionArea")
+attackInteract = NodePath("InteractArea")
+storePoint = NodePath("Sprite/StorePoint")
+instanceScale = 0.25
+
+[node name="desk" type="Sprite2D" parent="Entities/Furniture_fridge" unique_id=326833749]
+position = Vector2(16, 0)
+texture = ExtResource("4_tua5b")
+
+[node name="Sprite" type="Node2D" parent="Entities/Furniture_fridge" unique_id=337505147]
+position = Vector2(16, 4)
+
+[node name="box" type="Sprite2D" parent="Entities/Furniture_fridge/Sprite" unique_id=1837370556]
+position = Vector2(0, -25)
+texture = ExtResource("5_4d6kx")
+
+[node name="StorePoint" type="Node2D" parent="Entities/Furniture_fridge/Sprite" unique_id=1052699678]
+position = Vector2(0, -11)
+
+[node name="CollisionArea" type="RigidBody2D" parent="Entities/Furniture_fridge" unique_id=1977624521]
+position = Vector2(16, 9)
+collision_layer = 2
+collision_mask = 0
+physics_material_override = SubResource("PhysicsMaterial_ku51g")
+gravity_scale = 0.0
+lock_rotation = true
+freeze = true
+script = ExtResource("4_ntkqf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_fridge/CollisionArea" unique_id=310662046]
+visible = false
+position = Vector2(0, 6.5)
+shape = SubResource("RectangleShape2D_ku51g")
+
+[node name="InteractArea" type="Area2D" parent="Entities/Furniture_fridge" unique_id=1263476641]
+position = Vector2(16, 8)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("5_iddr2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_fridge/InteractArea" unique_id=2018627845]
+visible = false
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_ntkqf")
+debug_color = Color(0.84317404, 0.0010731232, 0.91723996, 0.41960785)
+
+[node name="Furniture_desk" type="Node2D" parent="Entities" unique_id=983657160 node_paths=PackedStringArray("collisionInteract", "attackInteract", "storepoint")]
+position = Vector2(64, -1)
+script = ExtResource("8_hrxm6")
+collisionInteract = NodePath("CollisionArea")
+attackInteract = NodePath("InteractArea")
+storepoint = NodePath("StorePoint")
+
+[node name="Sprite" type="Node2D" parent="Entities/Furniture_desk" unique_id=1287366337]
+position = Vector2(16, 2)
+
+[node name="desk" type="Sprite2D" parent="Entities/Furniture_desk/Sprite" unique_id=338113094]
+position = Vector2(0, -2)
+texture = ExtResource("4_tua5b")
+
+[node name="CollisionArea" type="RigidBody2D" parent="Entities/Furniture_desk" unique_id=654921389]
+position = Vector2(16, 9)
+collision_layer = 2
+collision_mask = 0
+physics_material_override = SubResource("PhysicsMaterial_ku51g")
+gravity_scale = 0.0
+lock_rotation = true
+freeze = true
+script = ExtResource("4_ntkqf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_desk/CollisionArea" unique_id=1146804638]
+position = Vector2(0, 6.5)
+shape = SubResource("RectangleShape2D_ku51g")
+
+[node name="InteractArea" type="Area2D" parent="Entities/Furniture_desk" unique_id=1522145627]
+position = Vector2(16, 8)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("5_iddr2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_desk/InteractArea" unique_id=129082100]
+position = Vector2(0, 7.5)
+shape = SubResource("RectangleShape2D_ntkqf")
+debug_color = Color(0.84317404, 0.0010731232, 0.91723996, 0.41960785)
+
+[node name="StorePoint" type="Node2D" parent="Entities/Furniture_desk" unique_id=805829398]
+position = Vector2(16, 1)
+
+[node name="Furniture_trashcan" type="Node2D" parent="Entities" unique_id=739359480 node_paths=PackedStringArray("collisionInteract", "attackInteract", "storepoint")]
+position = Vector2(96, -1)
+script = ExtResource("9_07xfw")
+collisionInteract = NodePath("CollisionArea")
+attackInteract = NodePath("InteractArea")
+storepoint = NodePath("StorePoint")
+
+[node name="Sprite" type="Node2D" parent="Entities/Furniture_trashcan" unique_id=1310306146]
+position = Vector2(16, 2)
+
+[node name="desk" type="Sprite2D" parent="Entities/Furniture_trashcan/Sprite" unique_id=1957760655]
+position = Vector2(0, -2)
+texture = ExtResource("9_h5wts")
+
+[node name="CollisionArea" type="RigidBody2D" parent="Entities/Furniture_trashcan" unique_id=1072906129]
+position = Vector2(16, 9)
+collision_layer = 2
+collision_mask = 0
+physics_material_override = SubResource("PhysicsMaterial_ku51g")
+gravity_scale = 0.0
+lock_rotation = true
+freeze = true
+script = ExtResource("4_ntkqf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_trashcan/CollisionArea" unique_id=1442447421]
+position = Vector2(0, 6.5)
+shape = SubResource("RectangleShape2D_ku51g")
+
+[node name="InteractArea" type="Area2D" parent="Entities/Furniture_trashcan" unique_id=75213816]
+position = Vector2(16, 8)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("5_iddr2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_trashcan/InteractArea" unique_id=1698550235]
+position = Vector2(0, 7.5)
+shape = SubResource("RectangleShape2D_ntkqf")
+debug_color = Color(0.84317404, 0.0010731232, 0.91723996, 0.41960785)
+
+[node name="StorePoint" type="Node2D" parent="Entities/Furniture_trashcan" unique_id=892162019]
+position = Vector2(16, -14)
