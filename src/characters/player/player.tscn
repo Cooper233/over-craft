@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://om6l0334acaa" path="res://src/characters/player/PlayerItemContainer.gd" id="6_hhaut"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5c1al"]
-radius = 15.0
+radius = 14.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_03ylq"]
 size = Vector2(40, 2)
@@ -24,18 +24,17 @@ turn_rate = 5.0
 attackArea = NodePath("boxCenter/AttackArea")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=247132928]
-position = Vector2(0, -32)
 shape = SubResource("CircleShape2D_5c1al")
 
 [node name="Visual" type="AnimatedSprite2D" parent="." unique_id=1623886880]
 material = ExtResource("2_03ylq")
+position = Vector2(0, 32)
 scale = Vector2(0.5, 0.5)
 sprite_frames = ExtResource("3_hhnms")
 offset = Vector2(0, -64)
 script = ExtResource("3_vobfi")
 
 [node name="boxCenter" type="Node2D" parent="." unique_id=1396237276]
-position = Vector2(0, -32)
 
 [node name="AttackArea" type="Area2D" parent="boxCenter" unique_id=1641880483]
 position = Vector2(26, 0)
@@ -50,7 +49,7 @@ script = ExtResource("5_hhnms")
 player = NodePath("..")
 
 [node name="ItemContainer" type="Node2D" parent="." unique_id=550424299]
-position = Vector2(0, -22)
+position = Vector2(0, 10)
 script = ExtResource("6_hhaut")
 radius = 40.0
 maxLeanAngle = 15.0

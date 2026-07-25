@@ -11,15 +11,29 @@
 [ext_resource type="Script" uid="uid://wmyastf0usxo" path="res://src/entities/FurnitureDesk.gd" id="8_hrxm6"]
 [ext_resource type="Script" uid="uid://bda11hpmkx553" path="res://src/entities/FurnitureTrashcan.gd" id="9_07xfw"]
 [ext_resource type="Texture2D" uid="uid://bi35omgmcaly3" path="res://assets/images/furniture/trashcan.png" id="9_h5wts"]
+[ext_resource type="Texture2D" uid="uid://duufugcbfe8oj" path="res://assets/images/furniture/board.png" id="12_31ta7"]
+[ext_resource type="Script" uid="uid://f4cysjp3y8lh" path="res://src/entities/FurnitureBoard.gd" id="12_byvv5"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ku51g"]
 friction = 0.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ku51g"]
-size = Vector2(32, 29)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_byvv5"]
+size = Vector2(32, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ntkqf"]
 size = Vector2(32, 29)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ku51g"]
+size = Vector2(32, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7dhnu"]
+size = Vector2(32, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ctc0p"]
+size = Vector2(32, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yv5cy"]
+size = Vector2(32, 16)
 
 [node name="root" type="Node2D" unique_id=358877700]
 y_sort_enabled = true
@@ -40,7 +54,7 @@ default_zoom = Vector2(2, 2)
 y_sort_enabled = true
 
 [node name="Furniture_fridge" type="Node2D" parent="Entities" unique_id=1803583387 node_paths=PackedStringArray("collisionInteract", "attackInteract", "storePoint")]
-position = Vector2(32, -1)
+position = Vector2(32, 31)
 script = ExtResource("3_3mp4b")
 collisionInteract = NodePath("CollisionArea")
 attackInteract = NodePath("InteractArea")
@@ -62,7 +76,7 @@ texture = ExtResource("5_4d6kx")
 position = Vector2(0, -11)
 
 [node name="CollisionArea" type="RigidBody2D" parent="Entities/Furniture_fridge" unique_id=1977624521]
-position = Vector2(16, 9)
+position = Vector2(16, -7)
 collision_layer = 2
 collision_mask = 0
 physics_material_override = SubResource("PhysicsMaterial_ku51g")
@@ -72,24 +86,22 @@ freeze = true
 script = ExtResource("4_ntkqf")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_fridge/CollisionArea" unique_id=310662046]
-visible = false
-position = Vector2(0, 6.5)
-shape = SubResource("RectangleShape2D_ku51g")
+position = Vector2(0, 15)
+shape = SubResource("RectangleShape2D_byvv5")
 
 [node name="InteractArea" type="Area2D" parent="Entities/Furniture_fridge" unique_id=1263476641]
-position = Vector2(16, 8)
+position = Vector2(16, -8)
 collision_layer = 4
 collision_mask = 0
 script = ExtResource("5_iddr2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_fridge/InteractArea" unique_id=2018627845]
-visible = false
 position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_ntkqf")
 debug_color = Color(0.84317404, 0.0010731232, 0.91723996, 0.41960785)
 
 [node name="Furniture_desk" type="Node2D" parent="Entities" unique_id=983657160 node_paths=PackedStringArray("collisionInteract", "attackInteract", "storepoint")]
-position = Vector2(64, -1)
+position = Vector2(64, 31)
 script = ExtResource("8_hrxm6")
 collisionInteract = NodePath("CollisionArea")
 attackInteract = NodePath("InteractArea")
@@ -103,7 +115,7 @@ position = Vector2(0, -2)
 texture = ExtResource("4_tua5b")
 
 [node name="CollisionArea" type="RigidBody2D" parent="Entities/Furniture_desk" unique_id=654921389]
-position = Vector2(16, 9)
+position = Vector2(16, -7)
 collision_layer = 2
 collision_mask = 0
 physics_material_override = SubResource("PhysicsMaterial_ku51g")
@@ -113,25 +125,25 @@ freeze = true
 script = ExtResource("4_ntkqf")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_desk/CollisionArea" unique_id=1146804638]
-position = Vector2(0, 6.5)
+position = Vector2(0, 15)
 shape = SubResource("RectangleShape2D_ku51g")
 
 [node name="InteractArea" type="Area2D" parent="Entities/Furniture_desk" unique_id=1522145627]
-position = Vector2(16, 8)
+position = Vector2(16, -8)
 collision_layer = 4
 collision_mask = 0
 script = ExtResource("5_iddr2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_desk/InteractArea" unique_id=129082100]
-position = Vector2(0, 7.5)
-shape = SubResource("RectangleShape2D_ntkqf")
+position = Vector2(0, 15)
+shape = SubResource("RectangleShape2D_7dhnu")
 debug_color = Color(0.84317404, 0.0010731232, 0.91723996, 0.41960785)
 
 [node name="StorePoint" type="Node2D" parent="Entities/Furniture_desk" unique_id=805829398]
 position = Vector2(16, 1)
 
 [node name="Furniture_trashcan" type="Node2D" parent="Entities" unique_id=739359480 node_paths=PackedStringArray("collisionInteract", "attackInteract", "storepoint")]
-position = Vector2(96, -1)
+position = Vector2(96, 31)
 script = ExtResource("9_07xfw")
 collisionInteract = NodePath("CollisionArea")
 attackInteract = NodePath("InteractArea")
@@ -145,7 +157,7 @@ position = Vector2(0, -2)
 texture = ExtResource("9_h5wts")
 
 [node name="CollisionArea" type="RigidBody2D" parent="Entities/Furniture_trashcan" unique_id=1072906129]
-position = Vector2(16, 9)
+position = Vector2(16, -7)
 collision_layer = 2
 collision_mask = 0
 physics_material_override = SubResource("PhysicsMaterial_ku51g")
@@ -155,11 +167,11 @@ freeze = true
 script = ExtResource("4_ntkqf")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_trashcan/CollisionArea" unique_id=1442447421]
-position = Vector2(0, 6.5)
-shape = SubResource("RectangleShape2D_ku51g")
+position = Vector2(0, 15)
+shape = SubResource("RectangleShape2D_ctc0p")
 
 [node name="InteractArea" type="Area2D" parent="Entities/Furniture_trashcan" unique_id=75213816]
-position = Vector2(16, 8)
+position = Vector2(16, -8)
 collision_layer = 4
 collision_mask = 0
 script = ExtResource("5_iddr2")
@@ -171,3 +183,50 @@ debug_color = Color(0.84317404, 0.0010731232, 0.91723996, 0.41960785)
 
 [node name="StorePoint" type="Node2D" parent="Entities/Furniture_trashcan" unique_id=892162019]
 position = Vector2(16, -14)
+
+[node name="Furniture_board" type="Node2D" parent="Entities" unique_id=230223050 node_paths=PackedStringArray("collisionInteract", "attackInteract", "storepoint")]
+position = Vector2(128, 31)
+script = ExtResource("12_byvv5")
+collisionInteract = NodePath("CollisionArea")
+attackInteract = NodePath("InteractArea")
+storepoint = NodePath("Sprite/StorePoint")
+instanceScale = 0.25
+
+[node name="desk" type="Sprite2D" parent="Entities/Furniture_board" unique_id=1433412562]
+position = Vector2(16, 0)
+texture = ExtResource("4_tua5b")
+
+[node name="Sprite" type="Node2D" parent="Entities/Furniture_board" unique_id=1560504680]
+position = Vector2(16, 0)
+
+[node name="board" type="Sprite2D" parent="Entities/Furniture_board/Sprite" unique_id=161072381]
+position = Vector2(0, -16)
+texture = ExtResource("12_31ta7")
+
+[node name="StorePoint" type="Node2D" parent="Entities/Furniture_board/Sprite" unique_id=1409477941]
+position = Vector2(0, -1)
+
+[node name="CollisionArea" type="RigidBody2D" parent="Entities/Furniture_board" unique_id=270978634]
+position = Vector2(16, -7)
+collision_layer = 2
+collision_mask = 0
+physics_material_override = SubResource("PhysicsMaterial_ku51g")
+gravity_scale = 0.0
+lock_rotation = true
+freeze = true
+script = ExtResource("4_ntkqf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_board/CollisionArea" unique_id=1024798927]
+position = Vector2(0, 15)
+shape = SubResource("RectangleShape2D_yv5cy")
+
+[node name="InteractArea" type="Area2D" parent="Entities/Furniture_board" unique_id=2135250000]
+position = Vector2(16, -8)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("5_iddr2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_board/InteractArea" unique_id=2006328218]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_ntkqf")
+debug_color = Color(0.84317404, 0.0010731232, 0.91723996, 0.41960785)

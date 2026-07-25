@@ -1,0 +1,17 @@
+[
+    {
+        "acceptType":["board"],
+        "itemNeed":{
+            "steel": 1
+        },
+        "pointNeed":100,
+        "result": "steelplate"
+    },{
+        "acceptType":["blender"],
+        "itemNeed":{
+            "steelplate": 1
+        },
+        "pointNeed":100,
+        "result": "gear"
+    }
+]

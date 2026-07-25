@@ -19,3 +19,5 @@ func mergeCompound(compound:ItemCompound)->bool:
 		else:
 			contain[i]+=compound.contain[i]
 	return true
+func getItemNum(id:String)->int:
+	return contain[id] if contain.has(id) else 0;

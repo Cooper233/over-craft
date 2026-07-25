@@ -22,6 +22,7 @@ PlayerController="*res://src/characters/player/player_controller.gd"
 NetworkManager="*res://src/network/network_manager.gd"
 GlobalTextureReader="*res://src/systems/GlobalTextureReader.gd"
 SceneLoader="*res://src/systems/scene_loader.gd"
+GlobalProcessManager="*uid://q8pppy5nsa7m"
 
 [display]
 
