@@ -6,12 +6,16 @@ signal level_ready
 @export var entities: Node2D
 @export var spawn_points: Array[Marker2D]
 
+static var INSTANCE
+
 const PLAYER_SCENE = preload("res://src/characters/player/player.tscn")
 
 func _ready() -> void:
 	if not entities:
 		entities = get_node_or_null("Entities")
+	GlobalEntityManager.register("moving_item", preload("res://prefabs/MovingItem.tscn"))
 	level_ready.emit()
+	INSTANCE=self
 
 func spawn_player(for_peer: int, pos: Vector2) -> void:
 	var node_name = "Player_%d" % for_peer
@@ -24,6 +28,10 @@ func spawn_player(for_peer: int, pos: Vector2) -> void:
 	entities.add_child(player)
 	if multiplayer.is_server():
 		player.set_multiplayer_authority(1)
+
+func spawnEntity(entity_id:String, glob_pos:Vector2, data:Dictionary={}) -> Node:
+	data["pos"]=glob_pos
+	return GlobalEntityManager.spawn_networked(entity_id,entities,data)
 
 func remove_player(for_peer: int) -> void:
 	if not entities:

@@ -26,7 +26,11 @@ func onCollideInteract(player:Player)->bool:
 
 func onAttackInteract(player:Player)->bool:
 	return false
-
+func onItemCollide(item:MovingItem)->bool:
+	_spoil_instance(item.contained)
+	_play_trash_animation()
+	playTrashAnimationRemote.rpc(item.contained.contain.duplicate(), item.contained.processPoint)
+	return true
 func onInteract(player:Player)->bool:
 	if player.items.size() == 0:
 		return false

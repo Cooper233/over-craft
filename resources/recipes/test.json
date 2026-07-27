@@ -11,7 +11,7 @@
         "itemNeed":{
             "steelplate": 1
         },
-        "pointNeed":100,
+        "pointNeed":50,
         "result": "gear"
     }
 ]

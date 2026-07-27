@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://cvd6w1xm5h0od"]
+
+[ext_resource type="Script" uid="uid://bxwpjnqugvda8" path="res://src/entities/MovingItem.gd" id="1_qpkey"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ctc0p"]
+radius = 5.0
+
+[node name="MovingItem" type="RigidBody2D" unique_id=345244449]
+collision_layer = 32
+collision_mask = 18
+gravity_scale = 0.0
+script = ExtResource("1_qpkey")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1254392217]
+shape = SubResource("CircleShape2D_ctc0p")

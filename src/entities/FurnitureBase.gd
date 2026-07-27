@@ -13,7 +13,8 @@ func onCollideInteract(player:Player):
 	return true
 func onInteract(player:Player):
 	return true
-
+func onItemCollide(item:MovingItem)->bool:
+	return true
 func _ready() -> void:
 	_request_sync()
 

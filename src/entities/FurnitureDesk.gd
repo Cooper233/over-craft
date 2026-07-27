@@ -34,23 +34,46 @@ func isValid()->bool:
 func onCollideInteract(player:Player)->bool:
 	return false
 
+func onItemCollide(item:MovingItem)->bool:
+	if is_multiplayer_authority():
+		if storedItem:
+			if storedItem.mergeCompound(item.contained):
+				storeSyncRemote.rpc(storedItem.contain.duplicate(), storedItem.processPoint)
+				_despawn_instance()
+				_spawn_instance()
+				syncAnim.rpc(AnimType.DESPAWN)
+				syncAnim.rpc(AnimType.SPAWN)
+		else:
+			storedItem = item.contained
+			storeSyncRemote.rpc(storedItem.contain.duplicate(), storedItem.processPoint)
+			_spawn_instance()
+			syncAnim.rpc(AnimType.SPAWN)
+			syncAnim.rpc(AnimType.STORE)
+	return true
+
 func onInteract(player:Player)->bool:
-	if storedItem:
-		return false
 	if player.items.size() == 0:
 		return false
 	GlobalSoundManager.playSoundForAll("fx/click", sprite.global_position)
 	interactCooldown = 0.2
 	if is_multiplayer_authority():
-		storedItem = player.items[0]
-		storeSyncRemote.rpc(storedItem.contain.duplicate(), storedItem.processPoint)
-		_spawn_instance()
-		_play_store_animation()
-		syncAnim.rpc(AnimType.SPAWN)
-		syncAnim.rpc(AnimType.STORE)
+		var playerItem = player.items[0]
 		player.items.remove_at(0)
 		player.syncItemsToAll()
 		player.containerComponent.rebuild()
+		if storedItem:
+			if storedItem.mergeCompound(playerItem):
+				storeSyncRemote.rpc(storedItem.contain.duplicate(), storedItem.processPoint)
+				_despawn_instance()
+				_spawn_instance()
+				syncAnim.rpc(AnimType.DESPAWN)
+				syncAnim.rpc(AnimType.SPAWN)
+		else:
+			storedItem = playerItem
+			storeSyncRemote.rpc(storedItem.contain.duplicate(), storedItem.processPoint)
+			_spawn_instance()
+			syncAnim.rpc(AnimType.SPAWN)
+			syncAnim.rpc(AnimType.STORE)
 	return true
 
 func onAttackInteract(player:Player)->bool:

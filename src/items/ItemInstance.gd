@@ -15,7 +15,7 @@ var _target_positions: Array[Vector2] = []
 
 func playEnter() -> void:
 	var target_y = position.y
-	position.y += 12
+	position.y += 12*sprite_scale
 	modulate.a = 0.0
 	var tween = create_tween()
 	tween.set_parallel(true)
@@ -25,11 +25,40 @@ func playEnter() -> void:
 func playExit() -> void:
 	var tween = create_tween()
 	tween.set_parallel(true)
-	tween.tween_property(self, "position:y", position.y + 10, 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	tween.tween_property(self, "position:y", position.y + 10*sprite_scale, 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
 	tween.tween_property(self, "modulate:a", 0.0, 0.15)
 	tween.set_parallel(false)
 	tween.tween_callback(queue_free)
-
+	await tween.finished
+var death_duration:float=0.4
+var death_jump_height:float=10
+func setAlpha(val:float):
+	self.modulate.a=val
+func playExit1() -> void:
+	var halfDuration = death_duration / 2.0
+	
+	var tween1 = create_tween()
+	tween1.set_parallel(false)
+	tween1.tween_property(self, "position:y", position.y - death_jump_height, halfDuration)\
+		.set_ease(Tween.EASE_OUT)\
+		.set_trans(Tween.TRANS_QUAD)
+	tween1.tween_property(self, "position:y", position.y + 30, halfDuration)\
+		.set_ease(Tween.EASE_IN)\
+		.set_trans(Tween.TRANS_QUAD)
+	
+	var tween2 = create_tween()
+	tween2.set_parallel(true)
+	tween2.tween_method(setAlpha, 1.0, 0.0, death_duration)\
+		.set_ease(Tween.EASE_IN)\
+		.set_trans(Tween.TRANS_EXPO)
+	
+	var tween3 = create_tween()
+	var rot = (randf() * 90 - 45) * 3.14 / 180
+	tween3.tween_property(self, "rotation", rot, death_duration)\
+		.set_ease(Tween.EASE_OUT)\
+		.set_trans(Tween.TRANS_SINE)
+	
+	await tween2.finished
 func set_compound(compound: ItemCompound) -> void:
 	contained = compound
 	_rebuild()
@@ -55,7 +84,7 @@ func _rebuild() -> void:
 			break
 
 	var count = flat.size()
-	var spacing = 8.0
+	var spacing = 8.0*sprite_scale
 	var start = - (count - 1) * spacing / 2.0
 	var dup_index: Dictionary = {}
 

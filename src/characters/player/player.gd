@@ -25,6 +25,7 @@ var _sync_target_rot: float
 @onready var containerComponent:PlayerItemContainer=$ItemContainer
 @onready var _physics_material: PhysicsMaterial = PhysicsMaterial.new()
 
+
 var items:Array=[]
 
 func _ready() -> void:
@@ -86,9 +87,15 @@ func _check_collision(state: PhysicsDirectBodyState2D) -> void:
 	if not test_move(state.transform, vel * state.step, col):
 		return
 	var collider = col.get_collider()
+	var layer:int=0
 	if not collider is CollisionObject2D:
-		return
-	var layer = collider.collision_layer
+		if collider is TileMapLayer:
+			var tm:TileMapLayer=collider
+			layer=tm.tile_set.get_physics_layer_collision_layer(0)
+		else:
+			return
+	else:
+		layer = collider.collision_layer
 	if layer & 2 and input_influence < 0.9:
 		var reflection = vel.normalized().bounce(col.get_normal())
 		if reflection.length() > 0.01:
@@ -129,11 +136,13 @@ func send_aim_angle(angle: float) -> void:
 	if multiplayer.get_remote_sender_id() != player_owner_id:
 		return
 	box.rotation = angle
+	aimingRotation=angle
 	_sync_aim.rpc(angle)
-
+var aimingRotation:float=0
 @rpc("authority", "call_remote", "unreliable")
 func _sync_aim(angle: float) -> void:
 	box.rotation = angle
+	aimingRotation=angle
 
 @rpc("any_peer", "call_remote", "unreliable")
 func receive_input(direction: Vector2) -> void:
@@ -174,7 +183,26 @@ func tryToGetItem(item:ItemCompound):
 	items.append(item)
 	syncItemsToAll()
 	$ItemContainer.rebuild()
-
+@rpc("any_peer", "call_remote", "unreliable")
+func tryToSpecialMoveRemote()->void:
+	if multiplayer.get_remote_sender_id() != player_owner_id:
+		return
+	tryToSpecialMove()
+func tryToSpecialMove():
+	if items.size()>0:
+		ejectItem()
+func ejectItem():
+	var compound=items[0]
+	items.remove_at(0)
+	var dir=Vector2.RIGHT.rotated(box.rotation)
+	LevelControllerBase.INSTANCE.spawnEntity(
+		"moving_item",box.global_position,
+		{"dir":dir,"speed":300,"contain":compound.contain,"pp":compound.processPoint}
+	)
+	$ItemContainer.rebuild()
+	syncItemsToAll()
+	
+	
 func syncItemsToAll() -> void:
 	if not is_multiplayer_authority():
 		return

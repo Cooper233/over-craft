@@ -4,6 +4,7 @@ class_name CollideInteractableMark
 var host:Node2D
 var isValidFunc:Callable
 var onInteractFunc:Callable
+var onItemInteractFunc:Callable
 
 func register(host:Node2D):
 	self.host=host
@@ -11,13 +12,21 @@ func register(host:Node2D):
 		isValidFunc=host.isValid
 	if host.has_method("onCollideInteract"):
 		onInteractFunc=host.onCollideInteract
+	if host.has_method("onItemCollide"):
+		onItemInteractFunc=host.onItemCollide
 
 
 func isValid()->bool:
 	if isValidFunc:
 		return isValidFunc.call()
 	return false
-
+func onItemInteract(item:MovingItem)->bool:
+	if not isValid():
+		return false
+	if onItemInteractFunc:
+		return onItemInteractFunc.call(item)
+	else:
+		return false
 func onInteract(player:Player)->bool:
 	if not isValid():
 		return false

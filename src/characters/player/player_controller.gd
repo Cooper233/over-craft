@@ -32,7 +32,11 @@ func _physics_process(_delta: float) -> void:
 			controlled_player.tryToInteract()
 		else:
 			controlled_player.tryToInteractRemote.rpc_id(1)
-	
+	if Input.is_action_just_pressed("special"):
+		if multiplayer.is_server():
+			controlled_player.tryToSpecialMove()
+		else:
+			controlled_player.tryToSpecialMoveRemote.rpc_id(1)
 	_update_aim()
 
 func _update_aim() -> void:

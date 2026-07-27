@@ -1,18 +1,19 @@
 extends FurnitureBase
-class_name FurnitureBoard
+class_name FurnitureBlender
 
 enum AnimType {
 	STORE,
 	TAKE,
 	SPAWN,
 	DESPAWN,
+	PROCESS,
 }
 
 @export var collisionInteract:CollideInteractableMark
 @export var attackInteract:AttackIneractableMark
 @export var storepoint:Node2D
 @export var instanceScale:float = 0.5
-@export var acceptType:String = "board"
+@export var acceptType:String = "blender"
 
 @onready var sprite:Node2D=$Sprite
 
@@ -20,6 +21,8 @@ var interactCooldown:float=0
 var storedItem:ItemCompound
 var currentRecipe:ItemProcessRecipe
 var instance:ItemInstance
+var isProcessing:bool=false
+var processCooldown:float=0
 
 func _ready() -> void:
 	super()
@@ -29,6 +32,24 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if interactCooldown>0:
 		interactCooldown-=delta
+	if is_multiplayer_authority() and isProcessing and storedItem and currentRecipe:
+		processCooldown-=delta
+		if processCooldown<=0:
+			processCooldown=1.0
+			storedItem.processPoint+=10
+			if currentRecipe.checkCouldTransfer(storedItem):
+				GlobalSoundManager.playSoundForAll("fx/itemDone", sprite.global_position,-5)
+				storedItem=ItemCompound.createCompound(currentRecipe.result)
+				storeSyncRemote.rpc(storedItem.contain, 0)
+				isProcessing=false
+				_refresh_current_recipe()
+				despawnInstance()
+				spawnInstance()
+			else:
+				syncAnim(AnimType.PROCESS)
+				syncAnim.rpc(AnimType.PROCESS)
+				storeSyncRemote.rpc(storedItem.contain.duplicate(), storedItem.processPoint)
+			
 
 func isValid()->bool:
 	return interactCooldown<=0
@@ -48,28 +69,16 @@ func onAttackInteract(player:Player)->bool:
 	if not storedItem:
 		return false
 	if currentRecipe:
-		return _process_item(player)
+		if is_multiplayer_authority() and not isProcessing:
+			GlobalSoundManager.playSoundForAll("fx/machineStart", sprite.global_position)
+			isProcessing=true
+			processCooldown=1.0
+			syncAnim(AnimType.PROCESS)
+			syncAnim.rpc(AnimType.PROCESS)
+		return true
 	if player.items.size() == 0:
 		return _take_item(player)
 	return false
-
-func _process_item(player:Player) -> bool:
-	GlobalSoundManager.playSoundForAll("fx/click", sprite.global_position)
-	interactCooldown = 0.2
-	if is_multiplayer_authority():
-		storedItem.processPoint += 10
-		var recipe = currentRecipe
-		if recipe.checkCouldTransfer(storedItem):
-			GlobalSoundManager.playSoundForAll("fx/itemDone1", sprite.global_position,-8)
-			storedItem=ItemCompound.createCompound(recipe.result)
-			storeSyncRemote.rpc(storedItem.contain,0)
-			despawnInstance()
-			spawnInstance()
-		syncAnim(AnimType.STORE)
-		syncAnim.rpc(AnimType.STORE)
-		_refresh_current_recipe()
-		storeSyncRemote.rpc(storedItem.contain.duplicate(), storedItem.processPoint)
-	return true
 
 func _take_item(player:Player) -> bool:
 	GlobalSoundManager.playSoundForAll("fx/get_item", sprite.global_position)
@@ -78,14 +87,14 @@ func _take_item(player:Player) -> bool:
 		player.tryToGetItem(storedItem)
 		storedItem = null
 		currentRecipe = null
+		isProcessing = false
+		processCooldown = 0
 		storeSyncRemote.rpc({}, 0)
 		despawnInstance()
 		syncAnim(AnimType.TAKE)
 		syncAnim.rpc(AnimType.TAKE)
 	return true
-func onItemCollide(item:MovingItem)->bool:
-	addItemToStorange(item.contained)
-	return true
+
 func _process_interact(player:Player) -> bool:
 	if player.items.size() == 0:
 		return false
@@ -97,6 +106,9 @@ func _process_interact(player:Player) -> bool:
 		player.syncItemsToAll()
 		player.containerComponent.rebuild()
 		addItemToStorange(playerItem)
+	return true
+func onItemCollide(item:MovingItem)->bool:
+	addItemToStorange(item.contained)
 	return true
 func addItemToStorange(item:ItemCompound):
 	if storedItem:
@@ -121,13 +133,16 @@ func addItemToStorange(item:ItemCompound):
 		syncAnim.rpc(AnimType.STORE)
 func _on_sync_request(requester_id: int) -> void:
 	if storedItem:
-		_rpc_sync_state.rpc_id(requester_id, storedItem.contain.duplicate(), storedItem.processPoint)
+		_rpc_sync_state.rpc_id(requester_id, storedItem.contain.duplicate(), storedItem.processPoint, isProcessing)
 
 @rpc("authority", "unreliable")
-func _rpc_sync_state(contain: Dictionary, processPoint: int) -> void:
+func _rpc_sync_state(contain: Dictionary, processPoint: int, _isProcessing: bool) -> void:
 	storedItem = ItemCompound.new()
 	storedItem.contain = contain
 	storedItem.processPoint = processPoint
+	isProcessing = _isProcessing
+	if isProcessing:
+		processCooldown = 1.0
 	_refresh_current_recipe()
 	_spawn_instance()
 
@@ -145,6 +160,7 @@ func _despawn_instance():
 	if instance:
 		instance.playExit()
 		instance = null
+
 @rpc("unreliable", "call_remote")
 func syncAnim(type:int):
 	match type:
@@ -152,15 +168,18 @@ func syncAnim(type:int):
 		AnimType.TAKE: shake(6)
 		AnimType.SPAWN: _spawn_instance()
 		AnimType.DESPAWN: _despawn_instance()
+		AnimType.PROCESS:longshake()
 
 func despawnInstance():
 	_despawn_instance()
 	if multiplayer.is_server():
 		syncAnim.rpc(AnimType.DESPAWN)
+
 func spawnInstance():
 	_spawn_instance()
 	if multiplayer.is_server():
 		syncAnim.rpc(AnimType.SPAWN)
+
 @rpc("unreliable", "call_remote")
 func storeSyncRemote(contain: Dictionary, processPoint: int):
 	var compound = ItemCompound.new()
@@ -173,7 +192,17 @@ func storeSyncRemote(contain: Dictionary, processPoint: int):
 func takeSyncRemote():
 	storedItem = null
 	currentRecipe = null
-
+	isProcessing = false
+	processCooldown = 0
+func longshake():
+	GlobalSoundManager.playSoundForAll("fx/machineConstant.ogg", sprite.global_position,-8)
+	var orig_pos = sprite.position
+	var tween = create_tween()
+	var count:int=floor(1.0/0.03)
+	for i in count:
+		var offset = Vector2(randf_range(-1,1), randf_range(-1, 1))
+		tween.tween_property(sprite, "position", orig_pos + offset, 0.03).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(sprite, "position", orig_pos, 0.05).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 func shake(count:int):
 	var orig_pos = sprite.position
 	var tween = create_tween()
