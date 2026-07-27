@@ -28,6 +28,7 @@ func _physics_process(delta: float) -> void:
 		linear_velocity=linear_velocity.lerp(Vector2.ZERO, 2.0*delta)
 		if linear_velocity.length()<1.0:
 			playExit()
+			
 
 func rebuild():
 	if instance:
@@ -75,21 +76,25 @@ func on_recycled():
 		instance.queue_free()
 		instance=null
 func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:
-	if not is_multiplayer_authority():
-		return
 	if dying:return
 	_check_collision(state)
+@rpc("any_peer","reliable")
+func playExitRemote(mode:int):
+	if multiplayer.is_server():return
+	match mode:
+		0:playExit()
+		1:playExit1()
 func playExit()->void:
 	dying=true
 	await instance.playExit()
-	GlobalEntityManager.recycle(entity_type,self)
+	if is_multiplayer_authority():
+		GlobalEntityManager.recycle(entity_uid)
 func playExit1()->void:
 	dying=true
 	await instance.playExit1()
-	GlobalEntityManager.recycle(entity_type,self)
+	if is_multiplayer_authority():
+		GlobalEntityManager.recycle(entity_uid)
 func _check_collision(state: PhysicsDirectBodyState2D) -> void:
-	if not is_multiplayer_authority():
-		return
 	var vel = state.linear_velocity
 	if vel.length() < 0.01:
 		return
@@ -110,10 +115,11 @@ func _check_collision(state: PhysicsDirectBodyState2D) -> void:
 		if collider is CollideInteractableMark:
 			var mark:CollideInteractableMark=collider
 			if(mark.onItemInteract(self)):
-				GlobalEntityManager.recycle(entity_type,self)
-				GlobalSoundManager.playSoundForAll("fx/item_grounded",global_position)
+				if is_multiplayer_authority():
+					GlobalEntityManager.recycle(entity_uid)
+				GlobalSoundManager.play_sound("fx/item_grounded",global_position)
 	elif layer & (1<<4):
 		collision_layer=0
 		collision_mask=0
 		playExit1()
-		GlobalSoundManager.playSoundForAll("fx/item_grounded",global_position)
+		GlobalSoundManager.play_sound("fx/item_grounded",global_position)

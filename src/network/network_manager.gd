@@ -27,7 +27,7 @@ func _on_level_loaded(level: LevelControllerBase) -> void:
 func _spawn_for_peer(level: LevelControllerBase, peer_id: int) -> void:
 	var pos = level.get_spawn_position(peer_id - 1)
 	level.spawn_player(peer_id, pos)
-	_rpc_spawn_player.rpc_id(peer_id, peer_id, pos)
+	_rpc_spawn_player.rpc(peer_id, pos)
 
 func _sync_existing(level: LevelControllerBase, for_peer: int) -> void:
 	for player in level.get_players():

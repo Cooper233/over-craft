@@ -60,7 +60,15 @@ func triggerAttack():
 			nowCooldown=cooldown_hit
 		if nearest_target is AttackIneractableMark:
 			nearest_target.onInteract(player,true)
-			
+		if nearest_target is MovingItem:
+			var contained=nearest_target.contained
+			var dir=Vector2.RIGHT.rotated(player.box.rotation)
+			LevelControllerBase.INSTANCE.spawnEntity(
+				"moving_item",nearest_target.global_position,
+				{"dir":dir,"speed":300,"contain":contained.contain,"pp":contained.processPoint}
+			)
+			GlobalSoundManager.playSoundForAll("fx/item_grounded",player.global_position,-5)
+			GlobalEntityManager.recycle(nearest_target.entity_uid)
 	else:
 		GlobalSoundManager.playSoundForAll("fx/smack",player.global_position,-3)
 		nowCooldown=cooldown_miss
@@ -96,6 +104,11 @@ func triggerInteract():
 		player.containerComponent.addExtraYOffset(1)
 		if nearest_target is AttackIneractableMark:
 			nearest_target.onInteract(player,false)
-			
+		if nearest_target is MovingItem:
+			if player.items.size()<=0:
+				var contained=nearest_target.contained
+				player.tryToGetItem(contained)
+				GlobalSoundManager.playSoundForAll("fx/itemDone1",player.global_position,-3)
+				GlobalEntityManager.recycle(nearest_target.entity_uid)
 	else:
 		pass

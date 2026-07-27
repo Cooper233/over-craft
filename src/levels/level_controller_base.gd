@@ -6,7 +6,7 @@ signal level_ready
 @export var entities: Node2D
 @export var spawn_points: Array[Marker2D]
 
-static var INSTANCE
+static var INSTANCE:LevelControllerBase
 
 const PLAYER_SCENE = preload("res://src/characters/player/player.tscn")
 

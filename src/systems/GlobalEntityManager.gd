@@ -24,13 +24,14 @@ func spawn_networked(id:String, parent:Node, data:Dictionary)->Node:
 	_rpc_spawn_entity.rpc(id,data,node.entity_uid)
 	return node
 
-func recycle(id:String, node:Node):
-	var uid=node.entity_uid
-	_active.erase(uid)
+func recycle(id:int):
+	if not _active.has(id):return
+	var node=_active[id]
+	_active.erase(id)
 	if node.has_method("on_recycled"):
 		node.on_recycled()
 	if multiplayer.is_server():
-		_rpc_recycle_entity.rpc(uid)
+		_rpc_recycle_entity.rpc(id)
 	node.queue_free()
 
 @rpc("authority","unreliable")
