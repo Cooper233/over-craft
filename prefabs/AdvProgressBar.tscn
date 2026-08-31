@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://h0vy045tloqg"]
+
+[ext_resource type="Script" uid="uid://caqo7pani0tsu" path="res://src/ui/AdvProgressBar.gd" id="1_fl7rs"]
+[ext_resource type="Material" uid="uid://co64toyelui6n" path="res://assets/materials/ui/ProgressBarMat.tres" id="2_xqp55"]
+[ext_resource type="Texture2D" uid="uid://bh31vrrnw7o5a" path="res://assets/images/ui/progress_bar.png" id="3_31hco"]
+[ext_resource type="Texture2D" uid="uid://dh81a5h7lkg6l" path="res://assets/images/ui/progress_front.png" id="4_f8cyc"]
+
+[node name="AdvProgressBar" type="Control" unique_id=1443308333 node_paths=PackedStringArray("bar", "front")]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -816.0
+offset_top = -521.0
+offset_right = -784.0
+offset_bottom = -489.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.8, 0.8)
+script = ExtResource("1_fl7rs")
+bar = NodePath("bar")
+front = NodePath("front")
+
+[node name="bar" type="TextureRect" parent="." unique_id=431773869]
+material = ExtResource("2_xqp55")
+layout_mode = 0
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+texture = ExtResource("3_31hco")
+
+[node name="front" type="TextureRect" parent="." unique_id=1442211850]
+layout_mode = 0
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+texture = ExtResource("4_f8cyc")

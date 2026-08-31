@@ -72,7 +72,6 @@ func triggerAttack():
 	else:
 		GlobalSoundManager.playSoundForAll("fx/smack",player.global_position,-3)
 		nowCooldown=cooldown_miss
-
 func triggerInteract():
 	var hit:bool=false
 	var hitEntity:bool=false

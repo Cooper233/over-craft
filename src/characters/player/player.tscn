@@ -11,7 +11,7 @@
 radius = 14.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_03ylq"]
-size = Vector2(40, 2)
+size = Vector2(50, 10)
 
 [node name="Player" type="RigidBody2D" unique_id=1648402091 node_paths=PackedStringArray("attackArea")]
 collision_mask = 27

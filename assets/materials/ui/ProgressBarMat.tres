@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://co64toyelui6n"]
+
+[ext_resource type="Shader" uid="uid://codxju0yixxn3" path="res://assets/materials/ui/ProgressBarShader.gdshader" id="1_k4w7a"]
+
+[resource]
+shader = ExtResource("1_k4w7a")
+shader_parameter/progress = 1.0

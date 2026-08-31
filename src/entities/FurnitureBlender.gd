@@ -1,3 +1,5 @@
+### 家具-搅拌机
+### TODO:问题与菜板类似，建议后期修改
 extends FurnitureBase
 class_name FurnitureBlender
 
@@ -7,6 +9,8 @@ enum AnimType {
 	SPAWN,
 	DESPAWN,
 	PROCESS,
+	TIP_DESPAWN,
+	TIP_DESPAWN_DONE
 }
 
 @export var collisionInteract:CollideInteractableMark
@@ -14,6 +18,7 @@ enum AnimType {
 @export var storepoint:Node2D
 @export var instanceScale:float = 0.5
 @export var acceptType:String = "blender"
+@export var progressTip:FurnitureProgressTip
 
 @onready var sprite:Node2D=$Sprite
 
@@ -42,6 +47,7 @@ func _physics_process(delta: float) -> void:
 				storedItem=ItemCompound.createCompound(currentRecipe.result)
 				storeSyncRemote.rpc(storedItem.contain, 0)
 				isProcessing=false
+				tipDespawn(true)
 				_refresh_current_recipe()
 				despawnInstance()
 				spawnInstance()
@@ -50,7 +56,14 @@ func _physics_process(delta: float) -> void:
 				syncAnim.rpc(AnimType.PROCESS)
 				storeSyncRemote.rpc(storedItem.contain.duplicate(), storedItem.processPoint)
 			
-
+			
+func _process(delta: float) -> void:
+	if progressTip:
+		if storedItem and currentRecipe:
+			progressTip.syncProgress(1.0*storedItem.processPoint/currentRecipe.pointNeed)
+			progressTip.setShow()
+		else:
+			progressTip.syncProgress(0)
 func isValid()->bool:
 	return interactCooldown<=0
 
@@ -115,6 +128,7 @@ func addItemToStorange(item:ItemCompound):
 		if storedItem.mergeCompound(item):
 			storeSyncRemote.rpc(storedItem.contain.duplicate(), storedItem.processPoint)
 			_refresh_current_recipe()
+			tipDespawn(false)
 			despawnInstance()
 			spawnInstance()
 			syncAnim.rpc(AnimType.DESPAWN)
@@ -122,6 +136,7 @@ func addItemToStorange(item:ItemCompound):
 		else:
 			storedItem = null
 			currentRecipe = null
+			tipDespawn(false)
 			despawnInstance()
 			takeSyncRemote.rpc()
 	else:
@@ -169,6 +184,8 @@ func syncAnim(type:int):
 		AnimType.SPAWN: _spawn_instance()
 		AnimType.DESPAWN: _despawn_instance()
 		AnimType.PROCESS:longshake()
+		AnimType.TIP_DESPAWN: tipDespawnAnim(false)
+		AnimType.TIP_DESPAWN_DONE: tipDespawnAnim(true)
 
 func despawnInstance():
 	_despawn_instance()
@@ -179,7 +196,14 @@ func spawnInstance():
 	_spawn_instance()
 	if multiplayer.is_server():
 		syncAnim.rpc(AnimType.SPAWN)
-
+func tipDespawn(isDone:bool):
+	tipDespawnAnim(isDone)
+	if multiplayer.is_server():
+		var sytc=AnimType.TIP_DESPAWN
+		if isDone:sytc=AnimType.TIP_DESPAWN_DONE
+		syncAnim.rpc(sytc)
+func tipDespawnAnim(isDone:bool):
+	progressTip.setHide(isDone)
 @rpc("unreliable", "call_remote")
 func storeSyncRemote(contain: Dictionary, processPoint: int):
 	var compound = ItemCompound.new()

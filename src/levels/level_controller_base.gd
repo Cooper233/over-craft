@@ -5,17 +5,20 @@ signal level_ready
 
 @export var entities: Node2D
 @export var spawn_points: Array[Marker2D]
+@export var mapStaticUI:MapStaticUIManager
 
 static var INSTANCE:LevelControllerBase
 
 const PLAYER_SCENE = preload("res://src/characters/player/player.tscn")
 
+const UI_PROGRESSBAR=preload("res://prefabs/AdvProgressBar.tscn")
+
 func _ready() -> void:
 	if not entities:
 		entities = get_node_or_null("Entities")
 	GlobalEntityManager.register("moving_item", preload("res://prefabs/MovingItem.tscn"))
-	level_ready.emit()
 	INSTANCE=self
+	level_ready.emit()
 
 func spawn_player(for_peer: int, pos: Vector2) -> void:
 	var node_name = "Player_%d" % for_peer
