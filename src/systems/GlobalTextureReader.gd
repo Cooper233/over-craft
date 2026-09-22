@@ -11,3 +11,5 @@ func get_texture(path: String) -> Texture2D:
 	else:
 		push_error("TextureReader: 贴图文件不存在 -> " + path)
 	return tex
+func getItemIcon(itemId:String)->Texture2D:
+	return get_texture("res://assets/images/item/"+itemId)

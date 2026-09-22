@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://b67t3oe463wyr" path="res://assets/images/furniture/desk1.png" id="4_tua5b"]
 [ext_resource type="Texture2D" uid="uid://cfaae1gupby6e" path="res://assets/images/furniture/resourcebox.png" id="5_4d6kx"]
 [ext_resource type="Script" uid="uid://c3cwenehw1a8h" path="res://src/entities/AttackIneractableMark.gd" id="5_iddr2"]
+[ext_resource type="Script" uid="uid://cihx3lu02bkl0" path="res://src/ui/ItemIcon.gd" id="7_8k34f"]
 [ext_resource type="FontFile" uid="uid://cos4w7lfu14ae" path="res://assets/fonts/retro-pixel-thick.otf" id="8_ekxib"]
 [ext_resource type="Script" uid="uid://wmyastf0usxo" path="res://src/entities/FurnitureDesk.gd" id="8_hrxm6"]
 [ext_resource type="Script" uid="uid://bda11hpmkx553" path="res://src/entities/FurnitureTrashcan.gd" id="9_07xfw"]
@@ -80,21 +81,11 @@ offset_right = 310.6208
 offset_bottom = 128.62071
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.265, 0.265)
 texture = ExtResource("18_ya4lf")
 patch_margin_left = 43
 patch_margin_top = 43
 patch_margin_right = 44
 patch_margin_bottom = 46
-
-[node name="TextureRect" type="TextureRect" parent="MapStaticUI/TipRecipe/back" unique_id=1881450311]
-layout_mode = 0
-offset_left = 13.793093
-offset_top = 13.793091
-offset_right = 653.7931
-offset_bottom = 653.7931
-scale = Vector2(0.2, 0.2)
-texture = ExtResource("19_eo3jp")
 
 [node name="TextureRect2" type="TextureRect" parent="MapStaticUI/TipRecipe/back" unique_id=1563829334]
 layout_mode = 0
@@ -113,14 +104,6 @@ offset_bottom = 654.0
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("19_eo3jp")
 
-[node name="TextureRect4" type="TextureRect" parent="MapStaticUI/TipRecipe/back" unique_id=1389612672]
-layout_mode = 0
-offset_left = 27.586185
-offset_top = 27.586197
-offset_right = 126.06897
-offset_bottom = 126.068985
-texture = ExtResource("21_yg8lh")
-
 [node name="TextureRect5" type="TextureRect" parent="MapStaticUI/TipRecipe/back" unique_id=748304477]
 layout_mode = 0
 offset_left = 227.58606
@@ -129,12 +112,35 @@ offset_right = 326.06885
 offset_bottom = 126.069
 texture = ExtResource("22_ekxib")
 
-[node name="Label" type="Label" parent="MapStaticUI/TipRecipe/back" unique_id=139744833]
+[node name="ItemIcon" type="Control" parent="MapStaticUI/TipRecipe/back" unique_id=2133988609]
+anchors_preset = 0
+offset_left = 13.0
+offset_top = 14.0
+offset_right = 141.0
+offset_bottom = 142.0
+script = ExtResource("7_8k34f")
+
+[node name="IconBack" type="TextureRect" parent="MapStaticUI/TipRecipe/back/ItemIcon" unique_id=1881450311]
 layout_mode = 0
-offset_left = 98.11322
-offset_top = 60.37736
-offset_right = 138.11322
-offset_bottom = 143.37737
+offset_right = 640.0
+offset_bottom = 640.0
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("19_eo3jp")
+
+[node name="Icon" type="TextureRect" parent="MapStaticUI/TipRecipe/back/ItemIcon" unique_id=1389612672]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 14.0
+offset_right = 114.0
+offset_bottom = 114.0
+texture = ExtResource("21_yg8lh")
+
+[node name="Num" type="Label" parent="MapStaticUI/TipRecipe/back/ItemIcon" unique_id=139744833]
+layout_mode = 0
+offset_left = 94.0
+offset_top = 49.0
+offset_right = 134.0
+offset_bottom = 132.0
 text = "1"
 label_settings = SubResource("LabelSettings_8k34f")
 
