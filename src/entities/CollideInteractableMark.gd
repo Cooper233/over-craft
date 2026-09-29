@@ -21,6 +21,10 @@ func isValid()->bool:
 		return isValidFunc.call()
 	return false
 func onItemInteract(item:MovingItem)->bool:
+	# Wall impacts are physical responses and must not be blocked by interaction cooldowns.
+	if host is FurnitureBase and host.shouldTreatItemAsWall(item.contained):
+		item.hitWall()
+		return false
 	if not isValid():
 		return false
 	if onItemInteractFunc:

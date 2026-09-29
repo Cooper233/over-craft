@@ -1,3 +1,4 @@
+extends RefCounted
 class_name ItemProcessRecipe
 
 var acceptType:Array = []
@@ -6,12 +7,14 @@ var pointNeed:int = 0x3f3f3f3f
 var result:String = ""
 
 func checkItemCorrect(item:ItemCompound)->bool:
+	if not item or not item.canProcess():return false
 	if itemNeed.keys().size()!=item.contain.size():return false
 	for i in itemNeed.keys():
 		if item.getItemNum(i) != itemNeed[i]:
 			return false
 	return true
 func checkCouldTransfer(item:ItemCompound)->bool:
+	if not item or not item.canProcess():return false
 	if itemNeed.keys().size()!=item.contain.size():return false
 	if item.processPoint < pointNeed:
 		return false

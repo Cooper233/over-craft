@@ -111,6 +111,8 @@ func _take_item(player:Player) -> bool:
 func _process_interact(player:Player) -> bool:
 	if player.items.size() == 0:
 		return false
+	if not player.items[0].canProcess():
+		return false
 	GlobalSoundManager.playSoundForAll("fx/click", sprite.global_position)
 	interactCooldown = 0.2
 	if is_multiplayer_authority():
@@ -121,9 +123,13 @@ func _process_interact(player:Player) -> bool:
 		addItemToStorange(playerItem)
 	return true
 func onItemCollide(item:MovingItem)->bool:
+	if not is_multiplayer_authority() or not item.contained or not item.contained.canProcess():
+		return false
 	addItemToStorange(item.contained)
 	return true
 func addItemToStorange(item:ItemCompound):
+	if not item or not item.canProcess():
+		return
 	if storedItem:
 		if storedItem.mergeCompound(item):
 			storeSyncRemote.rpc(storedItem.contain.duplicate(), storedItem.processPoint)

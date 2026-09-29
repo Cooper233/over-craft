@@ -197,7 +197,7 @@ func ejectItem():
 	var dir=Vector2.RIGHT.rotated(box.rotation)
 	LevelControllerBase.INSTANCE.spawnEntity(
 		"moving_item",box.global_position,
-		{"dir":dir,"speed":300,"contain":compound.contain,"pp":compound.processPoint}
+		{"dir":dir,"speed":300,"item":compound.toData()}
 	)
 	$ItemContainer.rebuild()
 	syncItemsToAll()
@@ -210,18 +210,13 @@ func syncItemsToAll() -> void:
 	for c in items:
 		var compound = c as ItemCompound
 		if compound:
-			data.append({
-				"contain": compound.contain.duplicate(),
-				"processPoint": compound.processPoint
-			})
+			data.append(compound.toData())
 	_sync_items.rpc(data)
 
-@rpc("authority", "call_remote", "unreliable")
+@rpc("authority", "call_remote", "reliable")
 func _sync_items(data: Array) -> void:
 	items.clear()
 	for d in data:
-		var c = ItemCompound.new()
-		c.contain = d.contain
-		c.processPoint = d.processPoint
+		var c = ItemCompound.fromData(d)
 		items.append(c)
 	$ItemContainer.rebuild()

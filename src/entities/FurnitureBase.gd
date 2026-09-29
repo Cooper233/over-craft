@@ -20,6 +20,9 @@ func onInteract(player:Player):
 ## 物品与家具碰撞触发
 func onItemCollide(item:MovingItem)->bool:
 	return true
+## Rejected projectiles can use the same impact behavior as a wall.
+func shouldTreatItemAsWall(_item:ItemCompound) -> bool:
+	return false
 func _ready() -> void:
 	_request_sync()
 ## 客户端执行，用于向主机请求数据同步
@@ -27,7 +30,7 @@ func _request_sync() -> void:
 	if not is_multiplayer_authority():
 		_rpc_request_sync.rpc_id(1)
 ## 主机执行，用于向请求的客户端同步数据
-@rpc("any_peer", "unreliable")
+@rpc("any_peer", "reliable")
 func _rpc_request_sync() -> void:
 	if not is_multiplayer_authority():
 		return

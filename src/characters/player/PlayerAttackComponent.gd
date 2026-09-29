@@ -65,7 +65,7 @@ func triggerAttack():
 			var dir=Vector2.RIGHT.rotated(player.box.rotation)
 			LevelControllerBase.INSTANCE.spawnEntity(
 				"moving_item",nearest_target.global_position,
-				{"dir":dir,"speed":300,"contain":contained.contain,"pp":contained.processPoint}
+				{"dir":dir,"speed":300,"item":contained.toData()}
 			)
 			GlobalSoundManager.playSoundForAll("fx/item_grounded",player.global_position,-5)
 			GlobalEntityManager.recycle(nearest_target.entity_uid)

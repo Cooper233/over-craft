@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/systems/orders/OrderManager.gd" id="1"]
+
+[node name="OrderManager" type="Node"]
+script = ExtResource("1")

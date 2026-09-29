@@ -7,6 +7,7 @@ const MAX_SLOTS = 6
 const SLOT_RADIUS = 10.0
 const LERP_SPEED = 12.0
 const DUP_OFFSET = 1.5
+const iconResolution:float = 64.0
 
 @export var sprite_scale: float = 0.5
 
@@ -72,10 +73,11 @@ func _rebuild() -> void:
 	if not contained or contained.contain.is_empty():
 		return
 
-	var ids = contained.contain.keys()
+	var displayItems:Dictionary = contained.getDisplayItems()
+	var ids = displayItems.keys()
 	var flat: Array[String] = []
 	for id in ids:
-		var cnt = contained.contain[id] as int
+		var cnt = displayItems[id] as int
 		for j in cnt:
 			if flat.size() >= MAX_SLOTS:
 				break
@@ -100,7 +102,10 @@ func _rebuild() -> void:
 			"res://assets/images/item/item_" + item_id + ".png"
 		)
 		sprite.centered = true
-		sprite.scale = Vector2(sprite_scale, sprite_scale)
+		# Fit every source image inside the same square, preserving its aspect ratio.
+		var textureSize:Vector2 = sprite.texture.get_size() if sprite.texture else Vector2.ONE
+		var fitScale:float = iconResolution / maxf(1.0, maxf(textureSize.x, textureSize.y))
+		sprite.scale = Vector2.ONE * fitScale * sprite_scale
 		slot.add_child(sprite)
 
 		var base = Vector2(start + i * spacing, start + i * spacing)
@@ -110,6 +115,8 @@ func _rebuild() -> void:
 		var di = dup_index[item_id]
 		dup_index[item_id] = di + 1
 		var target = base + Vector2(-di, di) * DUP_OFFSET
+		if item_id == "plate" or item_id == "dirtyplate":
+			target = Vector2(0, -i * 8.0 * sprite_scale)
 		_target_positions.append(target)
 		slot.position = target
 

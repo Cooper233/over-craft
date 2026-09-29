@@ -47,8 +47,7 @@ func to_dict()->Dictionary:
 		"pos": global_position,
 		"dir": dir,
 		"speed": speed,
-		"contain": contained.contain if contained else {},
-		"pp": contained.processPoint if contained else 0,
+		"item": contained.toData() if contained else {},
 		"et": energeTime,
 	}
 
@@ -57,9 +56,7 @@ func from_dict(data:Dictionary):
 	dir=data.get("dir",Vector2.ZERO)
 	speed=data.get("speed",200.0)
 	energeTime=data.get("et",2.0)
-	contained=ItemCompound.new()
-	contained.contain=data.get("contain",{})
-	contained.processPoint=data.get("pp",0)
+	contained=ItemCompound.fromData(data.get("item", data))
 
 func on_spawned():
 	rebuild()
@@ -76,7 +73,7 @@ func on_recycled():
 		instance.queue_free()
 		instance=null
 func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:
-	if dying:return
+	if dying or not is_multiplayer_authority():return
 	_check_collision(state)
 @rpc("any_peer","reliable")
 func playExitRemote(mode:int):
@@ -94,6 +91,22 @@ func playExit1()->void:
 	await instance.playExit1()
 	if is_multiplayer_authority():
 		GlobalEntityManager.recycle(entity_uid)
+
+func hitWall() -> void:
+	if dying or not is_multiplayer_authority():
+		return
+	applyWallImpact()
+	applyWallImpact.rpc()
+
+@rpc("authority", "call_remote", "reliable")
+func applyWallImpact() -> void:
+	if dying:
+		return
+	collision_layer = 0
+	collision_mask = 0
+	linear_velocity = Vector2.ZERO
+	playExit1()
+	GlobalSoundManager.play_sound("fx/item_grounded", global_position)
 func _check_collision(state: PhysicsDirectBodyState2D) -> void:
 	var vel = state.linear_velocity
 	if vel.length() < 0.01:
@@ -119,7 +132,4 @@ func _check_collision(state: PhysicsDirectBodyState2D) -> void:
 					GlobalEntityManager.recycle(entity_uid)
 				GlobalSoundManager.play_sound("fx/item_grounded",global_position)
 	elif layer & (1<<4):
-		collision_layer=0
-		collision_mask=0
-		playExit1()
-		GlobalSoundManager.play_sound("fx/item_grounded",global_position)
+		hitWall()

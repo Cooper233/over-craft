@@ -35,24 +35,28 @@ func onCollideInteract(player:Player)->bool:
 	return false
 
 func onItemCollide(item:MovingItem)->bool:
+	if not is_multiplayer_authority() or not canStoreItem(item.contained):
+		return false
 	if is_multiplayer_authority():
 		if storedItem:
 			if storedItem.mergeCompound(item.contained):
-				storeSyncRemote.rpc(storedItem.contain.duplicate(), storedItem.processPoint)
+				storeSyncRemote.rpc(storedItem.toData())
 				_despawn_instance()
 				_spawn_instance()
 				syncAnim.rpc(AnimType.DESPAWN)
 				syncAnim.rpc(AnimType.SPAWN)
 		else:
 			storedItem = item.contained
-			storeSyncRemote.rpc(storedItem.contain.duplicate(), storedItem.processPoint)
+			storeSyncRemote.rpc(storedItem.toData())
 			_spawn_instance()
 			syncAnim.rpc(AnimType.SPAWN)
 			syncAnim.rpc(AnimType.STORE)
 	return true
 
 func onInteract(player:Player)->bool:
-	if player.items.size() == 0:
+	if not is_multiplayer_authority() or player.items.size() == 0:
+		return false
+	if not canStoreItem(player.items[0]):
 		return false
 	GlobalSoundManager.playSoundForAll("fx/click", sprite.global_position)
 	interactCooldown = 0.2
@@ -63,21 +67,21 @@ func onInteract(player:Player)->bool:
 		player.containerComponent.rebuild()
 		if storedItem:
 			if storedItem.mergeCompound(playerItem):
-				storeSyncRemote.rpc(storedItem.contain.duplicate(), storedItem.processPoint)
+				storeSyncRemote.rpc(storedItem.toData())
 				_despawn_instance()
 				_spawn_instance()
 				syncAnim.rpc(AnimType.DESPAWN)
 				syncAnim.rpc(AnimType.SPAWN)
 		else:
 			storedItem = playerItem
-			storeSyncRemote.rpc(storedItem.contain.duplicate(), storedItem.processPoint)
+			storeSyncRemote.rpc(storedItem.toData())
 			_spawn_instance()
 			syncAnim.rpc(AnimType.SPAWN)
 			syncAnim.rpc(AnimType.STORE)
 	return true
 
 func onAttackInteract(player:Player)->bool:
-	if not storedItem:
+	if not is_multiplayer_authority() or not storedItem:
 		return false
 	if player.items.size() > 0:
 		return false
@@ -88,22 +92,28 @@ func onAttackInteract(player:Player)->bool:
 		syncAnim.rpc(AnimType.TAKE)
 		player.tryToGetItem(storedItem)
 		storedItem = null
+		storeSyncRemote.rpc({})
 		_despawn_instance()
 		syncAnim.rpc(AnimType.DESPAWN)
 	return true
 
 func _on_sync_request(requester_id: int) -> void:
-	if storedItem:
-		_rpc_sync_state.rpc_id(requester_id, storedItem.contain.duplicate(), storedItem.processPoint)
+	_rpc_sync_state.rpc_id(requester_id, storedItem.toData() if storedItem else {})
 
-@rpc("authority", "unreliable")
-func _rpc_sync_state(contain: Dictionary, processPoint: int) -> void:
-	storedItem = ItemCompound.new()
-	storedItem.contain = contain
-	storedItem.processPoint = processPoint
-	_spawn_instance()
+@rpc("authority", "reliable")
+func _rpc_sync_state(data:Dictionary) -> void:
+	storeSyncRemote(data)
+
+func canStoreItem(item:ItemCompound) -> bool:
+	if not item or item.contain.is_empty():
+		return false
+	if not storedItem:
+		return true
+	return storedItem.canProcess() and item.canProcess() and storedItem.processPoint == 0 and item.processPoint == 0
 
 func _spawn_instance():
+	if not storedItem:
+		return
 	if instance!=null:
 		instance.playExit()
 	instance = ItemInstance.new()
@@ -123,15 +133,15 @@ func syncAnim(type:int):
 	match type:
 		AnimType.STORE: _play_store_animation()
 		AnimType.TAKE: _play_get_animation()
-		AnimType.SPAWN: _spawn_instance()
-		AnimType.DESPAWN: _despawn_instance()
+		AnimType.SPAWN: pass # The reliable content snapshot owns the item visual.
+		AnimType.DESPAWN: pass
 
-@rpc("unreliable", "call_remote")
-func storeSyncRemote(contain: Dictionary, processPoint: int):
-	var compound = ItemCompound.new()
-	compound.contain = contain
-	compound.processPoint = processPoint
-	storedItem = compound
+@rpc("authority", "reliable", "call_remote")
+func storeSyncRemote(data:Dictionary):
+	storedItem = ItemCompound.fromData(data) if not data.is_empty() else null
+	_despawn_instance()
+	if storedItem:
+		_spawn_instance()
 
 @rpc("unreliable", "call_remote")
 func takeSyncRemote():

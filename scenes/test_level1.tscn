@@ -24,6 +24,13 @@
 [ext_resource type="Texture2D" uid="uid://dswfos0aodl7x" path="res://assets/images/ui/arrow.png" id="20_yg8lh"]
 [ext_resource type="Texture2D" uid="uid://bcj35687ghgnj" path="res://assets/images/item/item_steel.png" id="21_yg8lh"]
 [ext_resource type="Texture2D" uid="uid://cnplc1oi6lhxt" path="res://assets/images/item/item_gear.png" id="22_ekxib"]
+[ext_resource type="Script" uid="uid://dv7k70hbgq7vy" path="res://src/entities/FurnitureRecipeTip.gd" id="23_recipe_tip"]
+[ext_resource type="Script" uid="uid://dvebmsv1a1132" path="res://src/entities/FurniturePack.gd" id="24_pack"]
+[ext_resource type="Script" uid="uid://wij3ou2xfu0u" path="res://src/entities/FurnitureDrivethrough.gd" id="25_drivethrough"]
+[ext_resource type="Script" path="res://src/entities/FurnitureDinein.gd" id="26_dinein"]
+[ext_resource type="Script" path="res://src/entities/FurnitureDishback.gd" id="27_dishback"]
+[ext_resource type="Script" path="res://src/entities/FurnitureDishwash.gd" id="28_dishwash"]
+[ext_resource type="PackedScene" path="res://prefabs/OrderManager.tscn" id="29_orders"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_8k34f"]
 font = ExtResource("8_ekxib")
@@ -41,7 +48,7 @@ size = Vector2(32, 16)
 size = Vector2(32, 29)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ku51g"]
-size = Vector2(32, 16)
+size = Vector2(32, 31)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dhnu"]
 size = Vector2(32, 29)
@@ -61,6 +68,7 @@ mapStaticUI = NodePath("MapStaticUI")
 script = ExtResource("17_ovgfg")
 
 [node name="TipRecipe" type="Control" parent="MapStaticUI" unique_id=292907357]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_left = 144.0
@@ -341,6 +349,12 @@ debug_color = Color(0.84317404, 0.0010731232, 0.91723996, 0.41960785)
 position = Vector2(16, -11)
 script = ExtResource("14_di26f")
 
+[node name="RecipeTip" type="Node2D" parent="Entities/Furniture_board" unique_id=543954617]
+position = Vector2(16, -20)
+script = ExtResource("23_recipe_tip")
+showDistance = 32.0
+mouseShowDistance = 32.0
+
 [node name="Furniture_blender" type="Node2D" parent="Entities" unique_id=1556655063 node_paths=PackedStringArray("collisionInteract", "attackInteract", "storepoint", "progressTip")]
 position = Vector2(160, 31)
 script = ExtResource("14_ctc0p")
@@ -393,4 +407,247 @@ debug_color = Color(0.84317404, 0.0010731232, 0.91723996, 0.41960785)
 position = Vector2(16, -17)
 script = ExtResource("14_di26f")
 
+[node name="RecipeTip" type="Node2D" parent="Entities/Furniture_blender" unique_id=2098737167]
+position = Vector2(16, -24)
+script = ExtResource("23_recipe_tip")
+showDistance = 32.0
+mouseShowDistance = 32.0
+
+[node name="Furniture_drivethrough" type="Node2D" parent="Entities" unique_id=1871251881 node_paths=PackedStringArray("collisionInteract", "attackInteract", "storePoint")]
+position = Vector2(446, 31)
+script = ExtResource("25_drivethrough")
+collisionInteract = NodePath("CollisionArea")
+attackInteract = NodePath("InteractArea")
+storePoint = NodePath("StorePoint")
+
+[node name="Sprite" type="Node2D" parent="Entities/Furniture_drivethrough" unique_id=752352742]
+position = Vector2(16, 2)
+
+[node name="desk" type="Sprite2D" parent="Entities/Furniture_drivethrough/Sprite" unique_id=231768231]
+position = Vector2(0, -2)
+texture = ExtResource("4_tua5b")
+
+[node name="CollisionArea" type="RigidBody2D" parent="Entities/Furniture_drivethrough" unique_id=1286735233]
+position = Vector2(16, -7)
+collision_layer = 2
+collision_mask = 0
+physics_material_override = SubResource("PhysicsMaterial_ku51g")
+gravity_scale = 0.0
+lock_rotation = true
+freeze = true
+script = ExtResource("4_ntkqf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_drivethrough/CollisionArea" unique_id=646666199]
+position = Vector2(0, 15)
+shape = SubResource("RectangleShape2D_ku51g")
+
+[node name="InteractArea" type="Area2D" parent="Entities/Furniture_drivethrough" unique_id=235527793]
+position = Vector2(16, -8)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("5_iddr2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_drivethrough/InteractArea" unique_id=583935847]
+position = Vector2(0, 7.5)
+shape = SubResource("RectangleShape2D_7dhnu")
+debug_color = Color(0.84317404, 0.0010731232, 0.91723996, 0.41960785)
+
+[node name="StorePoint" type="Node2D" parent="Entities/Furniture_drivethrough" unique_id=1810689956]
+position = Vector2(16, 1)
+
+[node name="Furniture_pack" type="Node2D" parent="Entities" unique_id=249864877 node_paths=PackedStringArray("collisionInteract", "attackInteract", "storepoint")]
+position = Vector2(384, -1)
+script = ExtResource("24_pack")
+collisionInteract = NodePath("CollisionArea")
+attackInteract = NodePath("InteractArea")
+storepoint = NodePath("StorePoint")
+instanceScale = 0.25
+
+[node name="Sprite" type="Node2D" parent="Entities/Furniture_pack" unique_id=1613688794]
+position = Vector2(16, 2)
+
+[node name="desk" type="Sprite2D" parent="Entities/Furniture_pack/Sprite" unique_id=769714281]
+position = Vector2(0, -2)
+texture = ExtResource("4_tua5b")
+
+[node name="CollisionArea" type="RigidBody2D" parent="Entities/Furniture_pack" unique_id=1138457493]
+position = Vector2(16, -7)
+collision_layer = 2
+collision_mask = 0
+physics_material_override = SubResource("PhysicsMaterial_ku51g")
+gravity_scale = 0.0
+lock_rotation = true
+freeze = true
+script = ExtResource("4_ntkqf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_pack/CollisionArea" unique_id=464235706]
+position = Vector2(0, 15)
+shape = SubResource("RectangleShape2D_ku51g")
+
+[node name="InteractArea" type="Area2D" parent="Entities/Furniture_pack" unique_id=1905015614]
+position = Vector2(16, -8)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("5_iddr2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_pack/InteractArea" unique_id=345640758]
+position = Vector2(0, 7.5)
+shape = SubResource("RectangleShape2D_7dhnu")
+debug_color = Color(0.84317404, 0.0010731232, 0.91723996, 0.41960785)
+
+[node name="StorePoint" type="Node2D" parent="Entities/Furniture_pack" unique_id=1437757676]
+position = Vector2(16, 1)
+
+[node name="Furniture_dinein" type="Node2D" parent="Entities" unique_id=1607277615 node_paths=PackedStringArray("dishback", "collisionInteract", "attackInteract", "storePoint")]
+position = Vector2(384, 222)
+script = ExtResource("26_dinein")
+dishback = NodePath("../Furniture_dishback")
+collisionInteract = NodePath("CollisionArea")
+attackInteract = NodePath("InteractArea")
+storePoint = NodePath("StorePoint")
+
+[node name="Sprite" type="Node2D" parent="Entities/Furniture_dinein" unique_id=646060934]
+position = Vector2(16, 2)
+
+[node name="desk" type="Sprite2D" parent="Entities/Furniture_dinein/Sprite" unique_id=660226937]
+position = Vector2(0, -2)
+texture = ExtResource("4_tua5b")
+
+[node name="CollisionArea" type="RigidBody2D" parent="Entities/Furniture_dinein" unique_id=1419564017]
+position = Vector2(16, -7)
+collision_layer = 2
+collision_mask = 0
+physics_material_override = SubResource("PhysicsMaterial_ku51g")
+gravity_scale = 0.0
+lock_rotation = true
+freeze = true
+script = ExtResource("4_ntkqf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_dinein/CollisionArea" unique_id=947131571]
+position = Vector2(0, 7.5)
+shape = SubResource("RectangleShape2D_ku51g")
+
+[node name="InteractArea" type="Area2D" parent="Entities/Furniture_dinein" unique_id=1628114507]
+position = Vector2(16, -8)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("5_iddr2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_dinein/InteractArea" unique_id=356887071]
+position = Vector2(0, 7.5)
+shape = SubResource("RectangleShape2D_7dhnu")
+debug_color = Color(0.84317404, 0.0010731232, 0.91723996, 0.41960785)
+
+[node name="StorePoint" type="Node2D" parent="Entities/Furniture_dinein" unique_id=714126216]
+position = Vector2(16, 1)
+
+[node name="RecipeTip" type="Node2D" parent="Entities/Furniture_dinein" unique_id=1785699420]
+position = Vector2(16, -24)
+script = ExtResource("23_recipe_tip")
+showDistance = 32.0
+mouseShowDistance = 32.0
+
+[node name="Furniture_dishback" type="Node2D" parent="Entities" unique_id=595507513 node_paths=PackedStringArray("collisionInteract", "attackInteract", "storePoint")]
+position = Vector2(32, 222)
+script = ExtResource("27_dishback")
+collisionInteract = NodePath("CollisionArea")
+attackInteract = NodePath("InteractArea")
+storePoint = NodePath("StorePoint")
+
+[node name="Sprite" type="Node2D" parent="Entities/Furniture_dishback" unique_id=93121824]
+position = Vector2(16, 2)
+
+[node name="desk" type="Sprite2D" parent="Entities/Furniture_dishback/Sprite" unique_id=833532145]
+position = Vector2(0, -2)
+texture = ExtResource("4_tua5b")
+
+[node name="CollisionArea" type="RigidBody2D" parent="Entities/Furniture_dishback" unique_id=872984760]
+position = Vector2(16, -7)
+collision_layer = 2
+collision_mask = 0
+physics_material_override = SubResource("PhysicsMaterial_ku51g")
+gravity_scale = 0.0
+lock_rotation = true
+freeze = true
+script = ExtResource("4_ntkqf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_dishback/CollisionArea" unique_id=1305298693]
+position = Vector2(0, 15)
+shape = SubResource("RectangleShape2D_ku51g")
+
+[node name="InteractArea" type="Area2D" parent="Entities/Furniture_dishback" unique_id=1885771400]
+position = Vector2(16, -8)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("5_iddr2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_dishback/InteractArea" unique_id=2015528128]
+position = Vector2(0, 7.5)
+shape = SubResource("RectangleShape2D_7dhnu")
+debug_color = Color(0.84317404, 0.0010731232, 0.91723996, 0.41960785)
+
+[node name="StorePoint" type="Node2D" parent="Entities/Furniture_dishback" unique_id=932988182]
+position = Vector2(16, 1)
+
+[node name="RecipeTip" type="Node2D" parent="Entities/Furniture_dishback" unique_id=1624707148]
+position = Vector2(16, -24)
+script = ExtResource("23_recipe_tip")
+showDistance = 32.0
+mouseShowDistance = 32.0
+
+[node name="Furniture_dishwash" type="Node2D" parent="Entities" unique_id=1472884785 node_paths=PackedStringArray("progressTip", "collisionInteract", "attackInteract", "storePoint")]
+position = Vector2(96, 222)
+script = ExtResource("28_dishwash")
+progressTip = NodePath("ProgressTip")
+collisionInteract = NodePath("CollisionArea")
+attackInteract = NodePath("InteractArea")
+storePoint = NodePath("StorePoint")
+
+[node name="Sprite" type="Node2D" parent="Entities/Furniture_dishwash" unique_id=454391162]
+position = Vector2(16, 2)
+
+[node name="desk" type="Sprite2D" parent="Entities/Furniture_dishwash/Sprite" unique_id=1941037853]
+position = Vector2(0, -2)
+texture = ExtResource("4_tua5b")
+
+[node name="CollisionArea" type="RigidBody2D" parent="Entities/Furniture_dishwash" unique_id=1612798508]
+position = Vector2(16, -7)
+collision_layer = 2
+collision_mask = 0
+physics_material_override = SubResource("PhysicsMaterial_ku51g")
+gravity_scale = 0.0
+lock_rotation = true
+freeze = true
+script = ExtResource("4_ntkqf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_dishwash/CollisionArea" unique_id=387025627]
+position = Vector2(0, 15)
+shape = SubResource("RectangleShape2D_ku51g")
+
+[node name="InteractArea" type="Area2D" parent="Entities/Furniture_dishwash" unique_id=417416528]
+position = Vector2(16, -8)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("5_iddr2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entities/Furniture_dishwash/InteractArea" unique_id=1915820675]
+position = Vector2(0, 7.5)
+shape = SubResource("RectangleShape2D_7dhnu")
+debug_color = Color(0.84317404, 0.0010731232, 0.91723996, 0.41960785)
+
+[node name="StorePoint" type="Node2D" parent="Entities/Furniture_dishwash" unique_id=582914949]
+position = Vector2(16, 1)
+
+[node name="RecipeTip" type="Node2D" parent="Entities/Furniture_dishwash" unique_id=1014784988]
+position = Vector2(16, -24)
+script = ExtResource("23_recipe_tip")
+showDistance = 32.0
+mouseShowDistance = 32.0
+
+[node name="ProgressTip" type="Node2D" parent="Entities/Furniture_dishwash" unique_id=312546059]
+position = Vector2(16, -11)
+script = ExtResource("14_di26f")
+
 [node name="FurnitureTipsLayer" type="CanvasLayer" parent="." unique_id=289563624]
+
+[node name="OrderManager" parent="." instance=ExtResource("29_orders")]

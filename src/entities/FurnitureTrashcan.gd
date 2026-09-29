@@ -29,7 +29,7 @@ func onAttackInteract(player:Player)->bool:
 func onItemCollide(item:MovingItem)->bool:
 	_spoil_instance(item.contained)
 	_play_trash_animation()
-	playTrashAnimationRemote.rpc(item.contained.contain.duplicate(), item.contained.processPoint)
+	playTrashAnimationRemote.rpc(item.contained.toData())
 	return true
 func onInteract(player:Player)->bool:
 	if player.items.size() == 0:
@@ -40,7 +40,7 @@ func onInteract(player:Player)->bool:
 		var compound = player.items[0]
 		_spoil_instance(compound)
 		_play_trash_animation()
-		playTrashAnimationRemote.rpc(compound.contain.duplicate(), compound.processPoint)
+		playTrashAnimationRemote.rpc(compound.toData())
 		player.items.remove_at(0)
 		player.syncItemsToAll()
 		player.containerComponent.rebuild()
@@ -55,10 +55,8 @@ func _spoil_instance(compound: ItemCompound):
 	inst.playExit()
 
 @rpc("unreliable", "call_remote")
-func playTrashAnimationRemote(contain: Dictionary, processPoint: int):
-	var compound = ItemCompound.new()
-	compound.contain = contain
-	compound.processPoint = processPoint
+func playTrashAnimationRemote(data:Dictionary):
+	var compound = ItemCompound.fromData(data)
 	_spoil_instance(compound)
 	_play_trash_animation()
 
